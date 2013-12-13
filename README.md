@@ -2,11 +2,10 @@
 
 ## Install
 
-
-
 ```
 git clone https://github.com/hiromitz/syncserver.git
 cd syncserver
+npm install
 bin/syncserver
 ```
 
