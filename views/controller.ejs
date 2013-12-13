@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Synchronized Cross-device Testing</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <style>
+      body {
+        font-family: 'Alegreya Sans';
+      }
+    </style>
+    <script src="//ajax.aspnetcdn.com/ajax/modernizr/modernizr-2.7.1.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Synchronized Cross-device Testing</h1>
+      <section id="form">
+        <p class="lead">Enter the URL to check any devices open this server.</p>
+        <form id="url-form">
+          <input name="url" id="url" type="text" value="http://">
+        </form>
+      </section>
+      <section id="devices">
+        <h2>Device list</h2>
+        <ul id="device-list">
+          <% for(var p in devices) { %>
+            <li><%= devices[p] %></li>
+          <% }; %>
+        </ul>
+      </section>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      WebFont.load({
+        google: {
+          families: ['Alegreya Sans']
+        }
+      });
+
+      var socket = io.connect('http://localhost:3000');
+      socket.on('connect', function() {
+        socket.on('hello', function (data) {
+          var $devices = $('#device-list');
+
+          $devices.empty();
+
+          $.each(data.devices, function(i, device) {
+            $('<li />').text(device).appendTo($devices);
+          });
+
+        });
+        $('#url-form').submit(function(e) {
+          e.preventDefault();
+          var url = $('#url').val();
+          socket.emit('url changed', {url: url});
+        });
+      });
+
+    </script>
+  </body>
+</html>

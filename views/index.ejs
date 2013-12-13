@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Synchronized Cross-device Testing</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="//ajax.aspnetcdn.com/ajax/modernizr/modernizr-2.7.1.js"></script>
+  </head>
+  <body>
+    <iframe id="frame-container" frameborder="0"></iframe>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io.connect('http://localhost:3000');
+      socket.on('connect', function() {
+        socket.emit('hello', { my: navigator.userAgent });
+        socket.on('updated', function (data) {
+          $('#frame-container').attr('src', data.url);
+        });
+      });
+    </script>
+  </body>
+</html>
